@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="<%= htmlWebpackPlugin.options.basePath %>/" />
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1 , maximum-scale=1.0, user-scalable=0"
+    />
+    <meta
+      name="version"
+      content="<%= htmlWebpackPlugin.options.version %>+<%= htmlWebpackPlugin.options.imageTag %>"
+    />
+    <!-- TODO: avoid unsafe-inline by setting nonce for all styles -->
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' <%= htmlWebpackPlugin.options.assetsDomain %>; style-src 'self' <%= htmlWebpackPlugin.options.assetsDomain %> fonts.googleapis.com 'unsafe-inline'; font-src 'self' <%= htmlWebpackPlugin.options.assetsDomain %> fonts.googleapis.com fonts.gstatic.com;"
+    /> -->
+
+    <!-- Disable cache for index.html -->
+    <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      (function () {
+        function getInitialTheme() {
+          try {
+            var persistedTheme = JSON.parse(window.localStorage.getItem('@app/theme'));
+
+            var hasPersistedPreference =
+              typeof persistedTheme === 'string' &&
+              ['light', 'dark'].indexOf(persistedTheme) !== -1;
+
+            if (hasPersistedPreference) {
+              return persistedTheme;
+            }
+
+            var mql = window.matchMedia('(prefers-color-scheme: dark)');
+            var hasMediaQueryPreference = typeof mql.matches === 'boolean';
+
+            if (hasMediaQueryPreference) {
+              return mql.matches ? 'dark' : 'light';
+            }
+          } catch (error) {
+            return 'light';
+          }
+        }
+
+        var initialTheme = getInitialTheme();
+
+        window.CURRENT_THEME = initialTheme;
+
+        const root = document.documentElement;
+
+        root.style.setProperty(
+          '--background-color',
+          initialTheme === 'light' ? '#FFFFFF' : '#111111'
+        );
+      })();
+    </script>
+    <!-- Include the splash screen here with inline styles so that it is shown as fast as possible -->
+    <div
+      id="splash-screen"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        background-color: var(--background-color);
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        bottom: 0;
+        z-index: 99999;
+      "
+    >
+      <svg width="120" height="20" xmlns="http://www.w3.org/2000/svg">
+        <g>
+          <text
+            font-weight="bold"
+            xml:space="preserve"
+            text-anchor="start"
+            font-family="'Open Sans'"
+            font-size="24"
+            id="svg_1"
+            y="20"
+            x="-60"
+            stroke-width="0"
+            stroke="#000"
+            fill="#007dbc"
+          >
+            MEPD
+          </text>
+        </g>
+      </svg>
+
+      <div
+        class="infinite-loader"
+        style="
+          width: 100px;
+          height: 4px;
+          border-radius: 2px;
+          margin-top: 16px;
+          background-color: rgba(150, 150, 150, 0.5);
+        "
+      >
+        <div class="line"></div>
+        <div class="subline inc"></div>
+        <div class="subline dec"></div>
+      </div>
+    </div>
+  </body>
+</html>

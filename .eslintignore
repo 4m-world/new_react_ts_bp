@@ -1,0 +1,4 @@
+assets/
+__mocks__/
+webpack.*.js
+jest.config.js
